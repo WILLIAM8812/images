@@ -52,23 +52,23 @@ if #args >= 2 then
 end
 
 function readShort()
-  local x = file:read()
-  return x + (file:read()) * 256
+  local x = file.read()
+  return x + (file.read()) * 256
 end
 
 -- Verify header
 for i=1,4 do
-  if file:read() ~= hdr[i] then
+  if file.read() ~= hdr[i] then
     error("Invalid header!")
   end
 end
 
-local hdrVersion = file:read()
+local hdrVersion = file.read()
 if hdrVersion > 1 then
   error("Unknown header version: " .. hdrVersion)
 end
 
-local platformVariant = file:read()
+local platformVariant = file.read()
 local platformId = readShort()
 if platformId ~= 2 or platformVariant ~= 0 then
   error("Unsupported platform ID: " .. platformId .. ":" .. platformVariant)
@@ -77,18 +77,18 @@ end
 local width = readShort()
 local height = readShort()
 
-local pw = file:read()
-local ph = file:read()
+local pw = file.read()
+local ph = file.read()
 if not (pw == 2 and ph == 3) and not (pw == 1 and ph == 1) then
   error("Unsupported character width: " .. pw .. "x" .. ph)
 end
 
-local bpp = file:read()
+local bpp = file.read()
 if bpp ~= 4 then
   error("Unsupported bit depth: " .. bpp)
 end
 
-local ccEntrySize = file:read()
+local ccEntrySize = file.read()
 local ccArraySize = readShort()
 if ccArraySize > 0 then
   if t.setPaletteColour == nil then
@@ -99,9 +99,9 @@ if ccArraySize > 0 then
       oldCols[i*3 + 1] = oldColR
       oldCols[i*3 + 2] = oldColG
       oldCols[i*3 + 3] = oldColB
-      local colB = file:read() / 255
-      local colG = file:read() / 255
-      local colR = file:read() / 255
+      local colB = file.read() / 255
+      local colG = file.read() / 255
+      local colR = file.read() / 255
       t.setPaletteColour(bit.blshift(1, i), colR, colG, colB)
     end
     colsChanged = true
@@ -145,12 +145,12 @@ local fgs = ""
 local chs = ""
 for x=0,width-1 do 
   if pw*ph == 1 then
-    bgs = bgs .. pal[1 + file:read()]
+    bgs = bgs .. pal[1 + file.read()]
     fgs = fgs .. "0"
     chs = chs .. " "
   else
-    local col = file:read()
-    local ch = file:read()
+    local col = file.read()
+    local ch = file.read()
     local fg = col % 16
     local bg = (col - fg) / 16
     if ch % 2 == 1 then
@@ -167,6 +167,8 @@ end
 t.setCursorPos(xoff, yoff + y)
 t.blit(chs, fgs, bgs)
 end
+
+file.close()
 
 local event, key = os.pullEvent( "key" )
 
