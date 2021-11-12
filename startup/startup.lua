@@ -26,7 +26,6 @@ local oldCols = {}
 local colsChanged = false
 local ctable = {}
 local hdr = {67,84,73,70}
-local args = {...}
 
 -- No Lua 5.3? Oh well.
 for a=0,1 do
@@ -46,10 +45,6 @@ end
 local file = fs.open("image.ctif", "rb")
 local t = term
 local isMonitor = false
-if #args >= 2 then
-  t = peripheral.wrap(args[2])
-  isMonitor = true
-end
 
 function readShort()
   local x = file.read()
