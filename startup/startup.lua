@@ -45,6 +45,8 @@ end
 local file = fs.open("image.ctif", "rb")
 local t = term
 local isMonitor = false
+t = peripheral.find("monitor")
+isMonitor = true
 
 function readShort()
   local x = file.read()
