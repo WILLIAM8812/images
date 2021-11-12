@@ -43,7 +43,7 @@ end
 end
 end
 
-local file = fs.open(args[1], "rb")
+local file = fs.open("image.ctif", "rb")
 local t = term
 local isMonitor = false
 if #args >= 2 then
